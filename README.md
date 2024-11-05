@@ -1,6 +1,6 @@
 # Hungry Shark
 
-Descrição do Projeto: "Hungry Shark" é um jogo simples desenvolvido em Python utilizando a biblioteca Pygame. No jogo, você controla um tubarão que deve coletar peixes enquanto evita bombas. O objetivo é atingir uma determinada pontuação, e se o tubarão colidir com uma bomba, é game over.
+"Hungry Shark" é um jogo simples desenvolvido em Python utilizando a biblioteca Pygame. No jogo, você controla um tubarão que deve coletar peixes enquanto evita bombas. O objetivo é atingir uma determinada pontuação, e se o tubarão colidir com uma bomba, é game over.
 
 Recursos e Funcionalidades:
 Compreensão da estrutura básica de um jogo em Pygame.
