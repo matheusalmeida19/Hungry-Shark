@@ -23,6 +23,11 @@ velocidade = 5
 estrelas_total = 8  # Número de estrelas
 meteoros_total = 10  # Número de meteoros
 
+# Alternância entre modos de janela e tela cheia
+modo_janela = (largura, altura)
+modo_tela_cheia = (largura, altura), pygame.FULLSCREEN
+tela = pygame.display.set_mode(modo_janela)
+tela_cheia = False
 
 # Carregar a imagem de Vitória
 try:
@@ -159,6 +164,7 @@ class Meteoro(pygame.sprite.Sprite):
 
 
 def menu_inicial():
+    global tela
     tela = pygame.display.set_mode((largura, altura))
     pygame.display.set_caption("HUNGRY SHARK")
 
@@ -210,6 +216,11 @@ def menu_inicial():
                 if botao_sair.collidepoint(evento.pos):
                     pygame.quit()
                     quit()
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_f:
+                global tela_cheia
+                tela_cheia = not tela_cheia
+                tela = pygame.display.set_mode(
+                    modo_tela_cheia if tela_cheia else modo_janela)
 
 
 # Carregar a imagem de Game Over
@@ -224,6 +235,7 @@ except pygame.error as e:
 
 
 def main():
+    global tela
     menu_inicial()
     print("Iniciando o jogo...")
     tela = pygame.display.set_mode((largura, altura))
@@ -350,7 +362,9 @@ def main():
                     quit()
             if evento.type == pygame.MOUSEBUTTONDOWN:
                 if botao_reiniciar.collidepoint(evento.pos):
+                    venceu = False
                     menu_inicial()  # Retorna ao menu inicial
+                    main()
 
         else:
             # Exibe mensagem de Game Over
