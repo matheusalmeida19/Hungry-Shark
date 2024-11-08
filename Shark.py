@@ -41,7 +41,7 @@ except pygame.error as e:
     quit()
 
 try:
-    som_bomba = pygame.mixer.Sound("bomba.wav")
+    som_bomba = pygame.mixer.Sound("tnt.mp3")
 except pygame.error as e:
     print(f"Erro ao carregar o som de bomba: {e}")
     pygame.quit()
