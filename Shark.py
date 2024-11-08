@@ -3,6 +3,7 @@ import random
 
 # Começa o jogo
 pygame.init()
+pygame.mixer.init()
 
 # Cores
 preto = (0, 0, 0)
@@ -32,6 +33,27 @@ except pygame.error as e:
     pygame.quit()
     quit()
 
+try:
+    som_coleta_peixe = pygame.mixer.Sound("coleta_peixe.wav")
+except pygame.error as e:
+    print(f"Erro ao carregar o som de coleta do peixe: {e}")
+    pygame.quit()
+    quit()
+
+try:
+    som_bomba = pygame.mixer.Sound("bomba.wav")
+except pygame.error as e:
+    print(f"Erro ao carregar o som de bomba: {e}")
+    pygame.quit()
+    quit()
+
+try:
+    pygame.mixer.music.load("musica_fundo.wav")
+    pygame.mixer.music.set_volume(0.1)
+except pygame.error as e:
+    print(f"Erro ao carregar a música de fundo: {e}")
+    pygame.quit()
+    quit()
 
 # Classe para a nave
 
@@ -42,7 +64,7 @@ class Nave(pygame.sprite.Sprite):
         try:
             # Carregar a imagem da nave em vez de usar uma superfície
             self.image = pygame.image.load("shark.png").convert_alpha()
-            # Ajuste o tamanho da imagem, se necessário
+            # Ajuste o tamanho da imagem
             self.image = pygame.transform.scale(self.image, (60, 75))
         except pygame.error as e:
             print(f"Erro ao carregar a imagem da nave: {e}")
@@ -139,6 +161,10 @@ class Meteoro(pygame.sprite.Sprite):
 def menu_inicial():
     tela = pygame.display.set_mode((largura, altura))
     pygame.display.set_caption("HUNGRY SHARK")
+
+    if not pygame.mixer.music.get_busy():
+        pygame.mixer.music.play(-1)
+
     # Carregar imagem de fundo do menu
     try:
         fundo_menu = pygame.image.load("mar.png")
@@ -180,6 +206,7 @@ def menu_inicial():
             if evento.type == pygame.MOUSEBUTTONDOWN:
                 if botao_jogar.collidepoint(evento.pos):
                     rodando = False  # Sai do menu para iniciar o jogo
+
                 if botao_sair.collidepoint(evento.pos):
                     pygame.quit()
                     quit()
@@ -258,17 +285,21 @@ def main():
                 nave, estrelas, True)
             for colisao in colisoes_estrelas:
                 pontuacao += 1
+                som_coleta_peixe.play()
                 # Recria a estrela que foi coletada
                 nova_estrela = Estrela()
                 all_sprites.add(nova_estrela)
                 estrelas.add(nova_estrela)
-                if pontuacao >= 8:  # Condição de vitória
+                if pontuacao >= 10:  # Condição de vitória
                     venceu = True  # O jogador venceu
 
             # Verifica se a nave colidiu com algum meteoro
             colisoes_meteoros = pygame.sprite.spritecollide(
                 nave, meteoros, False)
             if colisoes_meteoros:
+                game_over = True
+                som_bomba.play()
+                pygame.mixer.music.stop
                 game_over = True  # Termina o jogo se colidir com um meteoro
 
             # Desenha a imagem de fundo
